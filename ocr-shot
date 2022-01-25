@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# dependencies tesseract maim xclip
+
+VERSION="0.0.0"
+
+print_help() {
+  cat << EOF
+SYNOPSIS
+    ocr-shot [OPTIONS]
+DESCRIPTION
+    ocr-shot is an utility which captures screen and identifies the text in
+    the capture using ocr and copies it to the clipboard. 
+OPTIONS
+  -h,  --help                       Print help.
+  -v,  --version                    Print version.
+EOF
+
+  exit 0
+}
+
+print_version() {
+  echo "ocr-shot v$VERSION"
+  exit 0
+}
+
+main() {
+  file="$RANDOM"
+  maim -s | tesseract - /tmp/$file && xclip -sel clip /tmp/$file.txt && notify-send "OCR copied"
+}
+
+# TODO: Add dependency check
+
+case $1 in
+ -h|--help)
+    print_help
+    ;;
+ -v|--version)
+    print_version
+    ;;
+ *)
+    main
+    ;;
+esac
